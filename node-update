@@ -1,0 +1,31 @@
+#!/usr/bin/perl
+
+$prefix = "$ENV{HOME}/opt";
+
+$want_version = $ARGV[0];
+
+unless ($want_version) {
+	print "No version specified.\n";
+	exit 1;
+}
+
+chomp($os = lcfirst `uname`);
+$node_dir = "node-v$want_version-$os-x64";
+
+chdir $prefix or die $!;
+
+unless (-d $node_dir) {
+	print "Downloading v$want_version...\n";
+	`wget https://nodejs.org/dist/v$want_version/node-v$want_version-$os-x64.tar.xz`; $? and die $!;
+	print "Extracting v$want_version...\n";
+	`tar xf node-v$want_version-$os-x64.tar.xz`; $? and die $!;
+	print "Remove archive\n";
+	`rm node-v$want_version-$os-x64.tar.xz`; $? and die $!;
+}
+
+`rm node`;
+`ln -s $node_dir node`; $? and die $!;
+print "Updated to v$want_version\n";
+
+#$current_version = `node -v`;
+#$version_table = `curl -s https://nodejs.org/dist/index.tab`;

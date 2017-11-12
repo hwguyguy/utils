@@ -1,0 +1,25 @@
+#!/usr/bin/perl
+
+$prefix = "$ENV{HOME}/opt";
+
+$current_version = `yarn --version`; $? and die $!;
+$latest_version = `curl -s https://yarnpkg.com/latest-version`; $? and die $!;
+
+chomp($current_version, $latest_version);
+
+if ($current_version eq $latest_version) {
+	print "You are using the latest version.\n";
+	exit;
+}
+
+`mkdir $prefix/yarn-update-tmp`; $? and die $!;
+chdir "$prefix/yarn-update-tmp" or die $!;
+`wget https://yarnpkg.com/latest.tar.gz`; $? and die $!;
+`tar xf latest.tar.gz`; $? and die $!;
+`mv yarn-v$latest_version $prefix`; $? and die $!;
+`rm -r $prefix/yarn-update-tmp`; $? and die $!;
+chdir $prefix or die $!;
+`rm yarn`;
+`ln -s yarn-v$latest_version yarn`; $? and die $!;
+
+print "Updated to v$latest_version\n";
