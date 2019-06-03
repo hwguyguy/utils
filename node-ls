@@ -1,0 +1,15 @@
+#!/usr/bin/perl
+
+$prefix = "$ENV{HOME}/opt";
+
+chomp($os = lcfirst `uname`);
+$node_dir_prefix = 'node-v';
+$node_dir_suffix = "-$os-x64";
+$node_dir_pattern = "$node_dir_prefix*$node_dir_suffix";
+
+@dirs = glob "$prefix/$node_dir_pattern";
+@versions = map { substr $_, length($prefix) + 1 + length($node_dir_prefix), -length($node_dir_suffix) } @dirs;
+
+for (@versions) {
+	print "$_\n";
+}
