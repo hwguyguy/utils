@@ -11,16 +11,17 @@ unless ($want_version) {
 
 chomp($os = lcfirst `uname`);
 $node_dir = "node-v$want_version-$os-x64";
+$archive_name = "node-v$want_version-$os-x64.tar.xz";
 
 chdir $prefix or die $!;
 
 unless (-d $node_dir) {
 	print "Downloading v$want_version...\n";
-	`wget https://nodejs.org/dist/v$want_version/node-v$want_version-$os-x64.tar.xz`; $? and die $!;
+	`curl https://nodejs.org/dist/v$want_version/$archive_name -o $archive_name`; $? and die $!;
 	print "Extracting v$want_version...\n";
-	`tar xf node-v$want_version-$os-x64.tar.xz`; $? and die $!;
+	`tar xf $archive_name`; $? and die $!;
 	print "Remove archive\n";
-	`rm node-v$want_version-$os-x64.tar.xz`; $? and die $!;
+	`rm $archive_name`; $? and die $!;
 }
 
 `rm node`;
