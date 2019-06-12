@@ -24,8 +24,7 @@ unless (-d $node_dir) {
 	`rm $archive_name`; $? and die $!;
 }
 
-`rm node`;
-`ln -s $node_dir node`; $? and die $!;
+`ln -sfn $node_dir node`; $? and die $!;
 print "Updated to v$want_version\n";
 
 #$current_version = `node -v`;
